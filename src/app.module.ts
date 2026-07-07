@@ -9,10 +9,19 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // окно в мс — 60 секунд
+        limit: 20,  // максимум запросов с одного IP за окно
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -24,7 +33,11 @@ import { DataSource } from 'typeorm';
         password: configService.get('db_pass'),
         database: configService.get('db_name'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: false,
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        cli: {
+          migrationsDir: 'src/migrations',
+        },
       }),
       dataSourceFactory: async (options) => {
         if (!options) {
@@ -39,8 +52,15 @@ import { DataSource } from 'typeorm';
       rootPath: join(__dirname, '..', 'static'),
       serveRoot: '/static',
     }),
+        OrdersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
