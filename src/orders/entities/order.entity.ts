@@ -1,20 +1,7 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToMany, ManyToOne, JoinColumn,} from 'typeorm';
 import { OrderDetail } from './order-detail.entity';
-
-export enum OrderStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+import { OrderStatus } from '../../common/enums/order-status.enum';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('orders')
 export class Order {
@@ -41,6 +28,13 @@ export class Order {
     cascade: true,
   })
   orderDetails: OrderDetail[];
+
+  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'manager_id' })
+  manager: User;
+
+  @Column({ name: 'manager_id', nullable: true })
+  managerId: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

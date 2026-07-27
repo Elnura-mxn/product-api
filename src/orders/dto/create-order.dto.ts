@@ -1,17 +1,7 @@
-import {
-  IsDateString,
-  IsNumber,
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsEnum,
-  IsArray,
-  ValidateNested,
-  ArrayMinSize,
-} from 'class-validator';
+import { IsDateString, IsNumber, IsString, IsNotEmpty, IsOptional, IsEnum, IsArray, ValidateNested, ArrayMinSize, } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderStatus } from '../entities/order.entity';
+import { OrderStatus } from 'src/common/enums/order-status.enum';
 import { CreateOrderDetailDto } from './create-order-detail.dto';
 
 export class CreateOrderDto {
