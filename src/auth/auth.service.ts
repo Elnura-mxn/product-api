@@ -12,7 +12,7 @@ import { UserRole } from '../common/enums/user-role.enum';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 const SALT_ROUNDS = 10;
-const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 час
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -61,7 +61,7 @@ export class AuthService {
     if (!user) {
       return {
         message:
-          'Если такой email зарегистрирован, на него отправлена ссылка для сброса пароля',
+          'На этот email была отправлена ссылка для сброса пароля',
       };
     }
 
@@ -77,7 +77,7 @@ export class AuthService {
 
     return {
       message:
-        'Если такой email зарегистрирован, на него отправлена ссылка для сброса пароля',
+        'На этот email была отправлена ссылка для сброса пароля',
     };
   }
 
