@@ -33,7 +33,7 @@ export class CategoriesController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Получить все категории (с поиском)' })
+  @ApiOperation({ summary: 'Получить все категории' })
   findAll(@Query('search') search?: string) {
     return this.categoriesService.findAll(search);
   }
