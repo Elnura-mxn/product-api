@@ -21,14 +21,14 @@ export class UsersController {
 
   @Get()
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Список всех пользователей (только admin)' })
+  @ApiOperation({ summary: 'Список всех пользователей (только админ)' })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Patch(':id/role')
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Изменить роль пользователя (только admin)' })
+  @ApiOperation({ summary: 'Изменить роль пользователя (только админ)' })
   async updateRole(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
     const user = await this.usersService.findById(+id);
     if (!user) {
