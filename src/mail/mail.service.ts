@@ -44,4 +44,32 @@ export class MailService {
       throw error;
     }
   }
+
+  async sendReportEmail(to: string, subject: string, pdf: Buffer) {
+    const mailOptions = {
+      from: this.configService.get<string>('MAIL_FROM'),
+      to,
+      subject,
+      html: `
+        <p>Здравствуйте,</p>
+        <p>Во вложении еженедельный отчёт по заказам.</p>
+      `,
+      attachments: [
+        {
+          filename: `report-${new Date().toISOString().split('T')[0]}.pdf`,
+          content: pdf,
+          contentType: 'application/pdf',
+        },
+      ],
+    };
+
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      this.logger.log(`Отчёт отправлен на ${to}`);
+      return info;
+    } catch (error) {
+      this.logger.error(`Не удалось отправить отчёт на ${to}: ${error.message}`);
+      throw error;
+    }
+  }
 }
