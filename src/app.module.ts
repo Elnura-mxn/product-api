@@ -18,10 +18,13 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     ClsModule.forRoot({
       global: true,
       middleware: { mount: true },
@@ -58,6 +61,7 @@ import { DataSource } from 'typeorm';
     UsersModule,
     AuthModule,
     MailModule,
+    ReportModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
       serveRoot: '/static',
